@@ -25,8 +25,8 @@ sequenceDiagram
   opt backlog?
   USCIS->>USCIS: depending on country/visa type: can take 10 years!!!
   end
-  EMPLOYER-->>USCIS: files adjustment of status (green card)
-  Note right of DOL: Form I-485 etc.
+  FOREIGN WORKER-->>USCIS: files adjustment of status (green card)
+  Note right of USCIS: Form I-485 etc.
   USCIS->>FOREIGN WORKER: green card
 
  "
@@ -43,7 +43,7 @@ USCIS  <- read_excel("rawdata/USCIS-processingtime.xlsx", trim_ws = TRUE) %>%
 	dplyr::filter (Form == "I-485") %>%
 	dplyr::select(-Title , - 9) %>%
 	clean_names() %>%
-	rename( type = classification_or_basis_for_filing )
+	dplyr::rename( type = classification_or_basis_for_filing )
 
 USCIS$type <- factor (USCIS$type,
 							 levels = c("All Other Adjustment of Status", "Based on grant of asylum more than 1 year ago",
@@ -60,15 +60,15 @@ dput(levels(USCIS$type))
 # Lne chart -----------------------------------------------------------------------------------
 # ---- wide to  Long format
 USCIS_Long <- USCIS %>%
-	gather(key= "Year" , value = "I_485ProcessingTime",
+	tidyr::gather(key= "Year" , value = "I_485ProcessingTime",
 			 fy_2015:fy_2019,
 			 na.rm = FALSE)  %>%
-	select(-form)
+	dplyr::select(-form)
 library(directlabels)
 library(ggrepel)
 # ---- plot
 plot <- USCIS_Long %>%
-	mutate(label = if_else(Year == "fy_2019", as.character(type), NA_character_)) %>%
+	dplyr::mutate(label = if_else(Year == "fy_2019", as.character(type), NA_character_)) %>%
 	ggplot() +
 	aes(x = Year,  y = I_485ProcessingTime,  color = type) +
 	geom_point() +
@@ -83,8 +83,14 @@ scale_y_continuous ( limits = c( 4, 13) ) +
 geom_label_repel(aes(label = label),
 					  #nudge_x = 1,
 					  na.rm = TRUE) +
-
-theme(legend.position = "none" )   ##  theme(text=element_text(family="Garamond", size=14))
+	theme(
+		plot.title = element_text(size = 13, face = "bold"),
+		plot.subtitle = element_text(size = 11), # face = "bold"),
+		plot.caption = element_text(size = 10, face = "italic", hjust = 1),
+		legend.key.width = unit(3, "line"),
+		legend.position = "none"
+	)
+    ##  theme(text=element_text(family="Garamond", size=14))
 	#facet_wrap((~ type))
 
 plot

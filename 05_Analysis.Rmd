@@ -1,85 +1,60 @@
 ---
-title: "05_Analysis"
-author: "Luisa M Mimmi"
+title: "Employment-based green card process getting longer to complete"
+author: "Luisa M. Mimmi"
 date: "7/7/2019"
-output: html_document
+output: github_document
 ---
 
- ## Travel ban
- 
- The travel ban has been revised and the country included have changed. 
- Since I wanted to focus on perception, I use the list of 7 
- 
- "VENEZUELA", "SYRIA", "NORTH KOREA", "YEMEN", "LIBYA", "IRAN", "SOMALIA", "YEMEN" # ban
- > http://worldpopulationreview.com/countries/travel-ban-countries/
- _On March 6, 2017, United States President Donald Trump signed Executive Order 13780, also known as the Protecting the Nation from Foreign Terrorist Entry into the United States order. This replaced a previous executive order that was issued in January of 2017.
-Since it was signed, two presidential proclamations have revised the order. This is because court rulings prevented provisions of the order from being enforced. However, the Supreme Court has upheld the most recent version since June of 2018. _
+> Implementing the electoral promise to: _“Buy American and HIRE American”_ … by slowing down one green card petition at a time 
+
+Any immigrant to the U.S. who finally receives the green card in the mail probably breaths a sight of relief after a process that - depending on circumstances - can amount to years, thousands of pages in paperwork, plus government and lawyers' fees and the stress of navigating American complex and ever changing immigration law.
+
+Since the beginning, immigration has been a major priority of President Trump's policy and rethoric. Two weeks into his term, he signed the inflamatory Executive Order _"Protecting the Nation from Foreign Terrorist Entry into the United States"_, also known as the "Travel Ban", later superseded by a revised Executive Order and further adjusted twice. Soon after (April 2017), another Executive Order was signed that made explicit reference to Trump's electoral promise to: _"Buy American and Hire American"_, which included tightening the rules for H-1B visas (the most common way to temporarily sponsor foreign workers). This visa is actually the "gateway" into permant status (a.k.a. the green card), given that most of those who achieve "employment-based permanent residence" were previously H-1B visa holders (77% over the period 2014-2019).
+
+Complaints have ensued from US companies trying to hire or retain their foreign employees, for the excessive vetting and lagging processing times. Are there any available public data to validate these claims? Has the Trump administration actually slowed down the green card application process for foreign workers?
+
+## The process 
+Before addressing this question, it is important to understand the process of obtaining a green card on the basis of employment (which is different from the green card petitions based on family relations, asylum, refugee status, etc.). The diagram below illustrates the key steps in the process and the respective U.S. Government Agencies in charge.
+
++ Step 1: **"PERM" Labor Certification (ETA Form 9089)**: The Department of Labor (DOL), specifically the Office of Foreign Labor Certification (OFLC) receives from the employer the application of an "alien employment certification" and verifies that the conditions are in line with the market and efforts were made to advertise the job opening and recruit competitve American candidates. 
+
++ Step 2: **Immigrant Petition (form I-140)**: If the labor certification is granted, the employer can file an immigration petition with the U.S. Citizenship and Immigration Service (USCIS) on the premise of the labor certification.
+
++ Step 3: **Adjustment of Status (form I-485)**: If the immigration petitiion is approved, **AND** there is an available visa in the allowed quota per country of birth (in USCIS jargon, "current priority date" or no "backlog"), the employee applies for adjustment of status to U.S. permanent resident. 
+	+ Due to backlog citizens of certain countries (China,El Salvador, Guatemala, Honduras, India, Mexico, Philippines, Vietnam) must wait several years.
+
+![](GC_flow.png) 
+
+## Some evidence
+Luckily, the DOL's Office of Foreign Labor Certification, releases highly granular data on foreign labor certifications granted for Permanent, H-1B and many other visas. The datasets provide a wealth of information including the perspective job's details and charateristics of the foreign worker. 
+
+In terms of the amount of certifications granted (aggregated by region in the chart below), overall there is no evidence that the numbers have lowered during Trump's term, let aside some seasonality. Not even the countries under the "Travel Ban" showed any significant change in pattern. Actually, the average processing time during Trump's administration fell to 3.8 months from and average of 6.7 months (under Obama, in 2014-2016) - which cannot be ascribed to stricter auditing, because the share of denied certifications remained substantially the same. 
+
+![](gg_static_region.png)
+
+Evidently, the first step of the process (under the purview of OFLC) was not affected by "Hire American" proclaims and understandably so. For one thing, the level of education and skills of the candidates are impressive (93% hold a graduate or postgraduate degree). Looking at most popular job titles, 24% contain the word "Software" in the description, followed by other highly specialized professionals engaged in Computer Systems and Engineering. Curiously, the only non "IT nerd" job title that makes the top 10 is "Poultry cutters and trimmers". Further down, but within the top 50, also some Truck Drivers, Caregivers and Physicians can be found. 
+
+Perhaps the only somewhat puzzling figure retrieved form the OFLC dataset is that, for Indians, the percentage of cases with status "certified – expired" (i.e. the employer did not proceed to file form I-140 with USCIS), is a staggering 20.8% - the same figure is 3.5% for China and around 0% otherwise. Possibly, this confirms the hypothesis that delays get problematic between step 2 and 3, that is when the case moves to USCIS for approval of the immigration petition and subsequent adjustment of status. 
+
+Unfortunately, USCIS is not as generous as OFLC in sharing data, but the agency recently released a table showing the aggregate processing time averages for each and every type of petition from 2015 to 2019. 
+The numbers related to the I-485 applications are evidently lagging compared to previous years. Since FY2015, USCIS processing time has increased across all types of green card petitions, but especially for Employment-Based one (increased by 89%). Notably, this is only the approval time for the adjustment of status. The worse part is the wait time for the actual permission to submit form I-485. Here, the country of birth becomes the main determinant because the visas are allotted accordnig to country quotas. The calculations can get quite mystifying because quotas are re-weighted and revised constantly, but immigrants born in China, India, Mexico, and Philippines definitely have it worst. For instance, as of May 2019, the _"current priority date"_ for most type of EB green cards is set at 2009/2010 for Indian born applicants... meaning those whose immigration petition was approved on or before 2009 can now apply! 
+
+![](USCIStime.png) 
+
+To be fair processing backlogs were an issue long before President Trump took office, but some of the administration’s newly implemented policy changes certainly didn't help. Among them, the additional biometric appointments for applicants and their dependents (regardless of age), or the requirement that all employment-based green card applicants attend in-person interviews. In case you were wondering whether the long shutdown of the federal government in 2018/2019 might have contributed to accumulating such delays... it didn't. Ironically enough, USCIS is actually a self-funded agency, mostly thanks to "user fees" from so many immigrants who stubbornly continue to see the U.S. as a land of opportunities to "permanently" call home. 
 
 
 
-STEPS 
-https://www.nolo.com/legal-encyclopedia/overview-perm-process-obtaining-labor-certification.html
-https://www.goellaw.com/us_immigration/permanent_residence_lawyers/perm_labor_certification/
+## DATA
++ [OFLC Disclosure Data](https://www.foreignlaborcert.doleta.gov/performancedata.cfm)
++ [USCIS processing time 2015-2019](https://egov.uscis.gov/processing-times/historic-pt)
 
-1. your employer makes a “prevailing wage request” PWD to the U.S. Department of Labor (DOL) via its website, http://icert.doleta.gov/. --> provides the DOL with information about the offer such as job requirements, job duties, and the worksite location. The DOL uses this information to issue the employer a *prevailing wage determination (PWD)*
-
-2. Your employer must conduct “good faith” *recruitment*, which means the recruitment must be genuinely calculated to attract any available U.S. workers. 
-
-3. your employer will file the PERM application with the DOL using *ETA Form 9089* (with information on the job opportunity, information on the employer’s recruitment process, and the foreign worker - provided no qualified and willing U.S. workers applied for the job position
-
-4. The DOL audits and can (1) approve the PERM (2) deny the PERM or (3) audit the PERM
-
----
-5. After the approved PERM, your employer can file an **I-140 (Immigrant Petition for Alien Worker)** visa petition on your behalf with U.S. Citizenship and Immigration Services. **USCIS** along with:
-	+ Approved PERM (Labor Certificate).
-	+ I-140 filing fee of $700 by check or money order made payable to the relevant USCIS regional Service Center.
-	+ Proof of the financial position of your employer/company in the form of an audited financial statement or a statement from the CFO of your company.
-	+ Experience letters from all your previous employers.
-There are *QUOTAS* depending on both on the preference category and the country of one's birth.
-	
-6. Pending (concurrent filing) or after approval of I-140 (this can take several months depending on **backlog** at the particular service center), you are eligible to file **I-485 (adjustment of status) application**.
-	+ Due to backlog certain nationalities (CHINA, EL SALVADOR, GUATEMALA, HONDURAS, INDIA, MEXICO, PHILIPPINES, VIETNAM) need to wait years (e.g. for Indians, the _"current priority date"_ as of May 2019 for EB green card is 2009/2010 -except 1st preference 2017) https://travel.state.gov/content/travel/en/legal/visa-law0/visa-bulletin/2019/visa-bulletin-for-may-2019.html
-	+ some people need to file for a new visa while waiting 
-
-## top 20 jobs 
-
-> (JOB_TITLE <- dat %>%
-+ 		group_by(JOB_INFO_JOB_TITLE) %>%
-+ 		tally() %>%   arrange(desc(n)) %>% .[1:50,] %>% .$JOB_INFO_JOB_TITLE)
- [1] "Software Engineer"                "Senior Software Engineer"         "Computer Systems Analyst - V"    
- [4] "Software Developer"               "Software Development Engineer II" "Assistant Professor"             
- [7] "Computer Systems Analyst - II"    "Programmer Analyst"               "Poultry Processing Worker"       
-[10] "Systems Analyst"                  "Computer Systems Analyst - IV"    "Component Design Engineer"       
-[13] "Software Engineer II"             "Business Analyst"                 "Sr. Software Engineer"           
-[16] "Software Development Engineer"    "Senior Software Developer"        "Poultry Processor"               
-[19] "Technical Lead"                   "software engineer"                "Accountant"                      
-[22] "SOFTWARE ENGINEER"                "Senior Programmer Analyst"        "Computer Systems Analyst"        
-[25] "Software Developer / Analyst"     "Project Manager"                  "Process Engineer"                
-[28] "Computer Programmer"              "Database Administrator"           "Market Research Analyst"         
-[31] "Truck Driver"                     "Sr. Programmer Analyst"           "Hospitalist"                     
-[34] "PROGRAMMER ANALYST"               "Caregiver"                        "SOFTWARE DEVELOPER"              
-[37] "Lead Analyst"                     "Poultry Trimmer"                  "Hospitalist Physician"           
-[40] "Project Engineer"                 "Business Systems Analyst"         "Packer"                          
-[43] "Technical Architect"              "Senior Engineer"                  "Senior Systems Analysts"         
-[46] "POULTRY CUTTER AND TRIMMER"       "Product Manager"                  "Member of Technical Staff"       
-[49] "Financial Analyst"                "General Labor"                   
-> 
-	
-	
-	
-## REinforcing iidea of DELAys 
-
-t_C_status_T
-> # Very interesting to see
-# INDIA	Certified-Expired	 24.5% (of all) !!!! (probably bc the follow up step with USCIS is too long)
-
-
-	
-## REFERENCES
-
+### REFERENCES
++ [National Law Review: on USCIS Reports on Lagging Processing Times](https://www.natlawreview.com/article/uscis-reports-lagging-processing-times)
 + [CATO Institute: on Immigration Wait Times and Green Card Backlogs](https://www.cato.org/publications/policy-analysis/immigration-wait-times-quotas-have-doubled-green-card-backlogs-are-long#full)
 
-# TWO-WAY ANOVA  ------------------------------------------------------------------------------
-# https://wlperry.github.io/2017stats/05_6_twowayanova.html
-# https://www.zoology.ubc.ca/~schluter/R/fit-model/
-
+### INSPIRING OPEN SOURCE R PROJECTS   ------------------------------------------------------------------------------
++ [Bill Perry: Two-way ANOVA in R](https://wlperry.github.io/2017stats/05_6_twowayanova.html)
++ [Sharan Naribole: Data Exploration on H-1B Visa dataset](https://github.com/sharan-naribole/H1B_visa_eda)
++ [Fabio Votta: article on refugees and great data viz](https://favstats.eu/post/exploring_us_refugee_data/)
++ [Paul Williamson: Custom `crosstab` function](http://rstudio-pubs-static.s3.amazonaws.com/6975_c4943349b6174f448104a5513fed59a9.html)
