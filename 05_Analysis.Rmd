@@ -1,0 +1,85 @@
+---
+title: "05_Analysis"
+author: "Luisa M Mimmi"
+date: "7/7/2019"
+output: html_document
+---
+
+ ## Travel ban
+ 
+ The travel ban has been revised and the country included have changed. 
+ Since I wanted to focus on perception, I use the list of 7 
+ 
+ "VENEZUELA", "SYRIA", "NORTH KOREA", "YEMEN", "LIBYA", "IRAN", "SOMALIA", "YEMEN" # ban
+ > http://worldpopulationreview.com/countries/travel-ban-countries/
+ _On March 6, 2017, United States President Donald Trump signed Executive Order 13780, also known as the Protecting the Nation from Foreign Terrorist Entry into the United States order. This replaced a previous executive order that was issued in January of 2017.
+Since it was signed, two presidential proclamations have revised the order. This is because court rulings prevented provisions of the order from being enforced. However, the Supreme Court has upheld the most recent version since June of 2018. _
+
+
+
+STEPS 
+https://www.nolo.com/legal-encyclopedia/overview-perm-process-obtaining-labor-certification.html
+https://www.goellaw.com/us_immigration/permanent_residence_lawyers/perm_labor_certification/
+
+1. your employer makes a “prevailing wage request” PWD to the U.S. Department of Labor (DOL) via its website, http://icert.doleta.gov/. --> provides the DOL with information about the offer such as job requirements, job duties, and the worksite location. The DOL uses this information to issue the employer a *prevailing wage determination (PWD)*
+
+2. Your employer must conduct “good faith” *recruitment*, which means the recruitment must be genuinely calculated to attract any available U.S. workers. 
+
+3. your employer will file the PERM application with the DOL using *ETA Form 9089* (with information on the job opportunity, information on the employer’s recruitment process, and the foreign worker - provided no qualified and willing U.S. workers applied for the job position
+
+4. The DOL audits and can (1) approve the PERM (2) deny the PERM or (3) audit the PERM
+
+---
+5. After the approved PERM, your employer can file an **I-140 (Immigrant Petition for Alien Worker)** visa petition on your behalf with U.S. Citizenship and Immigration Services. **USCIS** along with:
+	+ Approved PERM (Labor Certificate).
+	+ I-140 filing fee of $700 by check or money order made payable to the relevant USCIS regional Service Center.
+	+ Proof of the financial position of your employer/company in the form of an audited financial statement or a statement from the CFO of your company.
+	+ Experience letters from all your previous employers.
+There are *QUOTAS* depending on both on the preference category and the country of one's birth.
+	
+6. Pending (concurrent filing) or after approval of I-140 (this can take several months depending on **backlog** at the particular service center), you are eligible to file **I-485 (adjustment of status) application**.
+	+ Due to backlog certain nationalities (CHINA, EL SALVADOR, GUATEMALA, HONDURAS, INDIA, MEXICO, PHILIPPINES, VIETNAM) need to wait years (e.g. for Indians, the _"current priority date"_ as of May 2019 for EB green card is 2009/2010 -except 1st preference 2017) https://travel.state.gov/content/travel/en/legal/visa-law0/visa-bulletin/2019/visa-bulletin-for-may-2019.html
+	+ some people need to file for a new visa while waiting 
+
+## top 20 jobs 
+
+> (JOB_TITLE <- dat %>%
++ 		group_by(JOB_INFO_JOB_TITLE) %>%
++ 		tally() %>%   arrange(desc(n)) %>% .[1:50,] %>% .$JOB_INFO_JOB_TITLE)
+ [1] "Software Engineer"                "Senior Software Engineer"         "Computer Systems Analyst - V"    
+ [4] "Software Developer"               "Software Development Engineer II" "Assistant Professor"             
+ [7] "Computer Systems Analyst - II"    "Programmer Analyst"               "Poultry Processing Worker"       
+[10] "Systems Analyst"                  "Computer Systems Analyst - IV"    "Component Design Engineer"       
+[13] "Software Engineer II"             "Business Analyst"                 "Sr. Software Engineer"           
+[16] "Software Development Engineer"    "Senior Software Developer"        "Poultry Processor"               
+[19] "Technical Lead"                   "software engineer"                "Accountant"                      
+[22] "SOFTWARE ENGINEER"                "Senior Programmer Analyst"        "Computer Systems Analyst"        
+[25] "Software Developer / Analyst"     "Project Manager"                  "Process Engineer"                
+[28] "Computer Programmer"              "Database Administrator"           "Market Research Analyst"         
+[31] "Truck Driver"                     "Sr. Programmer Analyst"           "Hospitalist"                     
+[34] "PROGRAMMER ANALYST"               "Caregiver"                        "SOFTWARE DEVELOPER"              
+[37] "Lead Analyst"                     "Poultry Trimmer"                  "Hospitalist Physician"           
+[40] "Project Engineer"                 "Business Systems Analyst"         "Packer"                          
+[43] "Technical Architect"              "Senior Engineer"                  "Senior Systems Analysts"         
+[46] "POULTRY CUTTER AND TRIMMER"       "Product Manager"                  "Member of Technical Staff"       
+[49] "Financial Analyst"                "General Labor"                   
+> 
+	
+	
+	
+## REinforcing iidea of DELAys 
+
+t_C_status_T
+> # Very interesting to see
+# INDIA	Certified-Expired	 24.5% (of all) !!!! (probably bc the follow up step with USCIS is too long)
+
+
+	
+## REFERENCES
+
++ [CATO Institute: on Immigration Wait Times and Green Card Backlogs](https://www.cato.org/publications/policy-analysis/immigration-wait-times-quotas-have-doubled-green-card-backlogs-are-long#full)
+
+# TWO-WAY ANOVA  ------------------------------------------------------------------------------
+# https://wlperry.github.io/2017stats/05_6_twowayanova.html
+# https://www.zoology.ubc.ca/~schluter/R/fit-model/
+
