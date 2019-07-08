@@ -18,7 +18,7 @@ p_load(
 
 # Functions -----------------------------------------------------------------------------------
 source(here::here("R", "helpers.R"))
-source(here::here("R", "ggplot-theme.R"))
+# source(here::here("R", "ggplot-theme.R"))
 
 # Load Clean data -----------------------------------------------------------------------------
 dat2 <- readRDS(file = "dat2.rds")
@@ -65,7 +65,7 @@ dat2 %>%
   .[1:100, ] %>%
   .$COUNTRY_OF_BIRTH -> top100
 
-# ((I use them all)) --------------------------------------------------------------------------
+# ((I use all the countries)) --------------------------------------------------------------------------
 colnames(dat2)
 
 # Educ By REGION
@@ -122,7 +122,7 @@ colnames(dat2)
 # [28] "NAICS_US_CODE"                 "NAICS_US_TITLE"                "FOREIGN_WORKER_INFO_CITY"
 # [31] "FOREIGN_WORKER_INFO_STATE"     "FW_INFO_POSTAL_CODE"           "WORKSITE"
 
-# USING DPLYR
+# NAICS_sect By Country
 t_C_Sec_T <- dat2 %>%
   dplyr::group_by(COUNTRY_OF_BIRTH, NAICS_sect) %>%
   dplyr::summarise(
@@ -137,7 +137,7 @@ t_C_Sec_T
 
 
 
-# USING DPLYR
+# CASE STATUS By Country
 t_C_status_T <- dat2 %>%
   dplyr::group_by(COUNTRY_OF_BIRTH, CASE_STATUS) %>%
   dplyr::summarise(
@@ -152,7 +152,7 @@ t_C_status_T
 # Very interesting to see
 # INDIA	Certified-Expired	 24.5% (of all) !!!! (probably bc the follow up step with USCIS is too long)
 
-# too beg to look but interesting
+# JOB TITLE BY COUNTRY (too big to look but interesting)
 t_C_job_T <- dat2 %>%
   dplyr::group_by(COUNTRY_OF_BIRTH, PW_SOC_TITLE) %>%
   dplyr::summarise(
@@ -320,14 +320,16 @@ options(scipen = 999) #  to turn back on options(scipen = 0)
 
 # Test for normality of each group and store in shapirowilktests
 # This uses the broom package to get clean output of the test
-dat2 %>%
-  group_by(REGION_BIRTH, EDUC_LEVEL) %>%
-  # test
-  tidy(shapiro.test(.$TIMEm)) # ERROR
-dat_sample %>%
-  group_by(REGION_BIRTH, EDUC_LEVEL) %>%
-  # test
-  tidy(shapiro.test(.$TIMEm)) # ERROR
+# dat2 %>%
+#   group_by(REGION_BIRTH, EDUC_LEVEL) %>%
+#   # test
+#   tidy(shapiro.test(.$TIMEm)) # Error: C stack usage  7969584 is too close to the limit
+
+
+# dat_sample %>%
+#   group_by(REGION_BIRTH, EDUC_LEVEL) %>%
+#   # test
+#   tidy(shapiro.test(.$TIMEm)) # # Error: C stack usage  7969584 is too close to the limit
 
 aov1 <- aov(TIMEm ~ REGION_BIRTH, data = dat2)
 summary(aov1) # diff between the groups significant at 0.001
@@ -371,7 +373,7 @@ TukeyRes2_df <- broom::tidy(TukeyRes2) %>%
   arrange(desc(estimate))
 
 
-# # ==== Display
+# # ==== Display Pairwise-comparison
 caption <- "Pairwise-comparison between the WAGE means of groups (REGION_BIRTH)"
 colnames(TukeyRes2_df)
 
@@ -389,8 +391,6 @@ cat(TukeyRes2_df_table)
 
 # ------------------------------------------------------------------------------------------
 # TWO-WAY ANOVA  ------------------------------------------------------------------------------
-# https://wlperry.github.io/2017stats/05_6_twowayanova.html
-# https://www.zoology.ubc.ca/~schluter/R/fit-model/
 # -------------------------------------------------------------------------------------------
 
 
@@ -409,8 +409,6 @@ boxplot(TIMEm ~ REGION_BIRTH:REGION_BIRTH,
 )
 
 # This will generate two plots to compare groups according to the
-# and examine interactions
-# par(mfrow=c(1,3)) could use this to make multiple per page but is not great
 interaction.plot(dat2$REGION_BIRTH, dat2$EDUC_LEVEL, dat2$TIMEm)
 interaction.plot(dat2$EDUC_LEVEL, dat2$REGION_BIRTH, dat2$TIMEm)
 
@@ -436,7 +434,7 @@ stats::anova(modelI)
 # ... bc data is unbalanced here
 modelIII <- lm(TIMEm ~ SPECIAL_COUNTRY * EDUC_LEVEL, data = dat_sample) # <5000 for shapiro test to work
 
-# `car`
+# Using `car`
 car::Anova(modelIII, type = 2) # Use type="III" ALWAYS!!!!
 car::Anova(modelIII, type = 3, contrasts = list(topic = contr.sum, sys = contr.sum)) # Use type="III" ALWAYS!!!!
 summary(modelIII) # Produces r-square, overall p-value, parameter estimates
@@ -470,7 +468,7 @@ lsmseason2 <- pairs(lsmeans(modelIII, "SPECIAL_COUNTRY"), adjust = "bonferroni")
 
 test(lsmseason2)
 
-# 2/2 {stats}----------------------------------------------------------------------------------------
+# 2/2 Using {stats}----------------------------------------------------------------------------------------
 # Comparing means with a two-factor ANOVA SPECIAL_COUNTRY*EDUC_LEVEL
 # Model with interaction
 aovTWO <- aov(TIMEm ~ SPECIAL_COUNTRY * EDUC_LEVEL, data = dat2)
@@ -489,13 +487,11 @@ TukeyHSD(aov1)
 
 # Get an Idea...
 boxplot(TIMEm ~ SPECIAL_COUNTRY * EDUC_LEVEL, data = dat2)
-# really there is not much
+# even if they are mostly significant , really there is not much diff
 
 
-# Visualize Anova (one WAY) -------------------------------------------------------------------
-
-
-# ggpubr --------------------------------------------------------------------------------------
+# Some charts 2 Visualize Anova (one WAY) -----------------------------------------------------
+# Using {ggpubr}
 # ----- PALETTE of 3 divergent colors
 cols_div_7 <- c(colorRampPalette(RColorBrewer::brewer.pal(8, "Dark2"))(8)) # [c(1, 4, 8)])
 cols_div_7
@@ -541,7 +537,9 @@ bp <- ggboxplot(dat2,
   ylab = "TIME of certif in m", xlab = ""
 )
 bp
-# Add p-values comparing groups
+
+
+# Add p-values comparing groups ---------------------------------------------------------------
 
 # Specify the comparisons you want
 my_comparisons <- list(
@@ -556,10 +554,7 @@ bp + stat_compare_means(comparisons = my_comparisons, label = "p.signif") + # Ad
 
 
 
-# Violin plots with box plots inside
-# :::::::::::::::::::::::::::::::::::::::::::::::::::
-# Change fill color by groups: region
-
+# # Violin plots   ----------------------------------------------------------------------------
 ggviolin(dat2,
   x = "REGION_BIRTH", y = "TIMEm", fill = "REGION_BIRTH",
   palette = cols_div_7
@@ -581,9 +576,6 @@ ggviolin(dat2,
 # 					 axis.text = element_text(size=rel(1.5))))
 # }
 
-# Avoid scientific notation in plot
-options(scipen = 999)
-
 # g <- ggplot(data = dat2, aes(x=YEAR, y = PREVAILING_WAGE))
 # g <- g + geom_boxplot(aes(fill=EMPLOYER_STATE)) + coord_cartesian(ylim=c(0,125000))
 # g <- g + xlab("YEAR") + ylab("WAGE (USD)") + get_theme()
@@ -597,22 +589,20 @@ options(scipen = 999)
 
 
 # Stack plots ---------------------------------------------------------------------------------
+# Using custom func in helpers.R --------------------------------------------------------------
+
 
 
 # N_ARRIVED  REGION BIRTH per year
 # Using     plot_input <- function(df, x_feature, fill_feature, metric,filter = FALSE, ...)
 input <- plot_input(dat2, "YEAR", "REGION_BIRTH", "TotalApps", filter = TRUE, Ntop = 10)
 # Using    plot_output <- function(df, x_feature,fill_feature,metric, xlabb,ylabb)
-g <- plot_output(input, "YEAR", "REGION_BIRTH", "TotalApps", "", "TOTAL NO. of APPLICATIONS") +
-  my_theme
-# theme(axis.title = element_text(size = rel(1.5)),
-# 		axis.text.y = element_text(size=rel(0.85),face="bold"))
+g <- plot_output(input, "YEAR", "REGION_BIRTH", "TotalApps", "", "TOTAL NO. of APPLICATIONS")
 g
 
 # TIME REGION BIRTH per year
 input <- plot_input(dat2, "YEAR", "REGION_BIRTH", "Time_med_d", filter = TRUE, Ntop = 10)
-g2 <- plot_output(input, "YEAR", "REGION_BIRTH", "Time_med_d", "", "Median Time in d") +
-  my_theme
+g2 <- plot_output(input, "YEAR", "REGION_BIRTH", "Time_med_d", "", "Median Time in d")
 g2
 
 # case Status
@@ -620,27 +610,30 @@ g2
 input <- plot_input(dat2, "YEAR", "CASE_STATUS", "TotalApps", filter = TRUE, Ntop = 10)
 
 # Using    plot_output <- function(df, x_feature,fill_feature,metric, xlabb,ylabb)
-g <- plot_output(input, "YEAR", "CASE_STATUS", "TotalApps", "", "TOTAL NO. of APPLICATIONS") +
-  my_theme
+g <- plot_output(input, "YEAR", "CASE_STATUS", "TotalApps", "", "TOTAL NO. of APPLICATIONS")
 # theme(axis.title = element_text(size = rel(1.5)),
 # 		axis.text.y = element_text(size=rel(0.85),face="bold"))
 g
 
 # occupation LEVEL per year
 input <- plot_input(dat2, "YEAR", "PW_LEVEL_9089", "Time_med_d", filter = TRUE, Ntop = 10)
-
-g <- plot_output(input, "YEAR", "PW_LEVEL_9089", "Time_med_d", "", "Median Time in d") +
-  my_theme
+g <- plot_output(input, "YEAR", "PW_LEVEL_9089", "Time_med_d", "", "Median Time in d")
 # theme(axis.title = element_text(size = rel(1.5)),
 # 		axis.text.y = element_text(size=rel(0.85),face="bold"))
 g
 
+
+
+# Final save data -----------------------------------------------------------------------------
 dat3 <- dat2
 saveRDS(dat3, file = "dat3.Rds")
 
+
+# Extra Checks --------------------------------------------------------------------------------
 dat3$NAICS_sect <- as.factor(dat3$NAICS_sect)
 
 levels(dat3$NAICS_sect)
+
 # Class of admission
 class <- dat3 %>%
   # dplyr::group_by(.$COUNTRY_OF_BIRTH) %>%
