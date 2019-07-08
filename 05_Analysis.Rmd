@@ -1,8 +1,10 @@
 ---
 title: "Employment-based green card process getting longer to complete"
 author: "Luisa M. Mimmi"
-date: "7/7/2019"
-output: html_document
+date: "Prepared: `r format(Sys.time(), '%B %e, %Y')`"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 > Implementing the electoral promise to: _“Buy American and HIRE American”_ … by slowing down one green card petition at a time 
