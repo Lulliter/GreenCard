@@ -1,4 +1,3 @@
-
 # DIsegno FLow chart (???) ---------------------------------------------------------------------
 # https://mikeyharper.uk/flowcharts-in-r-using-diagrammer/ FLOWCHART
 # https://rstudio-pubs-static.s3.amazonaws.com/90261_ad00e95221e14a33a50f2ebb56d34ab8.html
@@ -11,7 +10,7 @@ if(!require("pacman")){
 	install.packages("pacman")
 }
 library(pacman) # for loading packages
-p_load(DiagrammeR, tidyverse, readxl, janitor, ggrepel)
+p_load(DiagrammeR, tidyverse, readxl, janitor, ggrepel, tibble, ggpubr)
 
 
 diagram <- "
@@ -93,9 +92,7 @@ geom_label_repel(aes(label = label),
     ##  theme(text=element_text(family="Garamond", size=14))
 	#facet_wrap((~ type))
 
-plot
-
-ggsave( plot, filename =  "USCIStime.png")
+ggsave( plot, filename =  "gg_USCIStime.png")
 
 # By the way ----------------------------------------------------------------------------------
 USCIS %>%
@@ -111,3 +108,61 @@ USCIS %>%
 # 3 Refugee admission  57.1
 # 4 Employment-based   89.2
 # 5 Family-based       77.3
+
+
+
+# Immigration by category ---------------------------------------------------------------------
+
+# immi_type<- tibble::tribble(
+# 	~type, ~N2018, ~Perc,
+# 	"immediate relatives", 236526, (236526/533557)*100,
+# 	"special/vietnam", 9375+92,  ((9375+92)/533557)*100,
+# 	"family sponsored", 211641, (211641/533557)*100,
+# 	"employment based", 27345,  (27345/533557)*100,
+# 	"diversity", 48578, (48578/533557)*100
+# )
+
+# Source ./rawdata/state... + https://www.migrationpolicy.org/article/refugees-and-asylees-united-states#Adjusting_to_Lawful_Permanent_Resident_Status
+immi_type <- tibble::tribble(
+	~type, ~N2017, ~Perc,
+	"immediate relatives", 254430, (254430/705539)*100,
+	"special/vietnam",20034+36,  ((20034+36)/705539)*100,
+	"family sponsored", 212155, (212155/705539)*100,
+	"employment based", 23814,  (23814/705539)*100,
+	"diversity", 49067, (49067/705539)*100,
+	"refugees", 120356, (120356/705539)*100,
+	"asylees", 25647, (25647/705539)*100,
+)
+
+immi_type$Perc <- round(immi_type$Perc, 1)
+immi_type$type<- as.factor(immi_type$type)
+# inputs
+qualitative <- c(
+	"#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99",
+	"#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a"
+)
+
+
+# Show group names and value as labels
+labs <- if_else (immi_type$type == "employment based",
+					   paste0(immi_type$type, " (",
+					   		 round(immi_type$Perc,digits = 1 ),
+
+					   		 "%)"),
+					  ""
+	)
+
+
+p <- ggpie(data = immi_type, x = "Perc", #label = labs,
+		#lab.pos = "in", lab.font = "white",lab.adjust = 1,
+		fill = "type", color = "white",
+		palette = qualitative ,
+		title = 'Permanent residency granted by type in 2017 ',
+		subtitle = "(Tot = 705,539)")
+
+pie<- ggpar(p, legend = "bottom", legend.title ="Type of green card", font.title =  c(14, "bold"))
+
+ggsave ( pie, filename =  "gg_pie.png")
+
+
+# gridExtra::grid.arrange(pie, plot, nrow = 1)
