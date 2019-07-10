@@ -1,6 +1,8 @@
 # Project Title
 
-"Employment-based green card process getting longer to complete" 
+"Is President Trump holding on to his electoral promise to _“hire American”_?"
+
+> The green card process for foreign workers is getting slower and more demanding
 
 Study based on DOL/OFLC and USCIS data to vrify whether the Trump administration has slowed down the green card application process for foreign workers?
 
@@ -13,8 +15,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
  -->
  
 ## Project Structure
-The analysis can be reproduced running in sequence the R scripts `01_*`:`04_*` which will generate the charts `gg_*` and clean daata files `dat*.Rds`. Then `05_Analysis.Rmd` should compile the article as html and PDF. 
-In alternative, use `makefile` executing in terminal the command `make all`. 
+The analysis can be reproduced running in sequence the R scripts `01_*`:`04_*` which will generate the charts `gg_*` and clean data files `dat*.Rds`. Then `05_Analysis.Rmd` should compile the article as html and PDF. 
 
 	├── 01_ingest-clean.R
 	├── 02_explore-data.R
