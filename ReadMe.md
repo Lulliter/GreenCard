@@ -15,7 +15,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
  -->
  
 ## Project Structure
-The analysis can be reproduced running in sequence the R scripts `01_*`:`04_*` which will generate the charts `gg_*` and clean data files `dat*.Rds`. Then `05_Analysis.Rmd` should compile the article as html and PDF. 
+The analysis can be reproduced running in sequence the R scripts `01_*.R`:`04_*.R` which will generate the charts `gg_*.png` and clean data files `dat*.Rds`. 
+Then `05_Analysis.Rmd` should compile the article as html and PDF. 
 
 	├── 01_ingest-clean.R
 	├── 02_explore-data.R
