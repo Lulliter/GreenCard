@@ -7,7 +7,7 @@ all: 05_Analysis.pdf 05_Analysis.html
 	echo All files are now up to date
 
 clean:
-	rm -f  dat3.Rds gg_static_region.png USCIStime.png  pie.png 05_Analysis.html 05_Analysis.pdf
+	rm -f  dat3.Rds gg_static_region_a.png gg_USCIStime.png gg_top15country.png gg_top2.png gg_pie.png 05_Analysis.html 05_Analysis.pdf
 	# cant re-make dat2.Rds (too long) / GC_flow.png (needs Rstudio button to save)
 
 # --> CALL FROM SHELL ------------------------------------------------------------------------------
@@ -27,31 +27,37 @@ dat3.Rds: dat2.rds R/helpers.R
 	Rscript  02_explore-data.R
 
 # GGPLOT CHARTS
-gg_static_region.png: dat3.rds
-	Rscript  03_HistChart_bis.R
+gg_static_region_a.png: dat3.rds
+	Rscript  03_certification-charts.R
 
 gg_denied_region.png: dat3.rds
-	Rscript  03_HistChart_bis.R
+	Rscript  03_certification-charts.R
+
+gg_top15country.png: dat3.rds
+	Rscript  03_certification-charts.R
+
+gg_top2.png: dat3.rds
+	Rscript  03_certification-charts.R
 
 # FLOW CHARTS (NOT REALLY bc I need the button in RStudio to reproduce)
 #GC_flow.png: dat3.rds
-#	Rscript  04_Flowchart.R
+#	Rscript  04_flowchart.R
 
 # USCIS-processingtime CHARTS
 USCIStime.png: rawdata/USCIS-processingtime.xlsx
-	Rscript  04_Flowchart.R
+	Rscript  04_flowchart.R
 
-# USCIS-processingtime CHARTS
+# USCIS-pie CHARTS
 pie.png:
-	Rscript  04_Flowchart.R
+	Rscript  04_flowchart.R
 
 
 # Render an HTML report
-05_Analysis.html: 05_Analysis.Rmd gg_static_region.png GC_flow.png USCIStime.png pie.png
+05_Analysis.html: 05_Analysis.Rmd gg_static_region_a.png GC_flow.png gg_USCIStime.png
 	Rscript -e 'rmarkdown::render("05_Analysis.Rmd")'
 
 # Render an pdf report
-05_Analysis.pdf: 05_Analysis.Rmd gg_static_region.png GC_flow.png USCIStime.png pie.png
+05_Analysis.pdf: 05_Analysis.Rmd gg_static_region_a.png GC_flow.png gg_USCIStime.png
 	Rscript -e 'rmarkdown::render("05_Analysis.Rmd")'
 
 

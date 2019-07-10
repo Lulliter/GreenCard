@@ -15,16 +15,16 @@ p_load(DiagrammeR, tidyverse, readxl, janitor, ggrepel, tibble, ggpubr)
 
 diagram <- "
 sequenceDiagram
-  EMPLOYER-->>DOL: files labor certif application
+  EMPLOYER-->>DOL: STEP 1 - files labor certif application
   Note right of EMPLOYER: ETA Form 9089 etc.
   DOL->>EMPLOYER: approves
-  EMPLOYER-->>USCIS: files immigrant visa petition
+  EMPLOYER-->>USCIS: STEP 2 - files immigrant visa petition
   Note right of DOL: Form I-140 etc.
   USCIS->>EMPLOYER: approves
   opt backlog?
   USCIS->>USCIS: depending on country/visa type: can take 10 years!!!
   end
-  FOREIGN WORKER-->>USCIS: files adjustment of status (green card)
+  FOREIGN WORKER-->>USCIS: STEP 3 - files adjustment of status (green card)
   Note right of USCIS: Form I-485 etc.
   USCIS->>FOREIGN WORKER: green card
 

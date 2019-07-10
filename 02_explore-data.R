@@ -7,7 +7,7 @@ p_load(
   tidyverse, readxl, writexl, here,
   ggmap, ggrepel, lazyeval, hashmap, lubridate, janitor,
   ggpubr,
-  PairedData,
+  # PairedData,
   # Specific to AnOVA / 2way ANOVA
   broom, car, # provides many functions that are applied to a fitted regression model
   Rmisc,
@@ -15,6 +15,8 @@ p_load(
   lsmeans
 )
 
+# turn off scientific notaton
+options(scipen = 999) #  to turn back on options(scipen = 0)
 
 # Functions -----------------------------------------------------------------------------------
 source(here::here("R", "helpers.R"))
@@ -65,10 +67,12 @@ dat2 %>%
   .[1:100, ] %>%
   .$COUNTRY_OF_BIRTH -> top100
 
-# ((I use all the countries)) --------------------------------------------------------------------------
+
+# Group Means - 2 Categ Vars ------------------------------------------------------------------
+# ((I use all the countries))
 colnames(dat2)
 
-# Educ By REGION
+# By REGION & Educ Level
 t_Reg_Ed_T <- dat2 %>%
   dplyr::group_by(REGION_BIRTH, EDUC_LEVEL) %>%
   dplyr::summarise(
@@ -81,7 +85,7 @@ t_Reg_Ed_T <- dat2 %>%
 
 t_Reg_Ed_T
 
-# Educ By SPECIAL COUNTRY
+# BY SPECIAL COUNTRY & Educ
 t_SpecCou_Ed_T <- dat2 %>%
   dplyr::group_by(SPECIAL_COUNTRY, EDUC_LEVEL) %>%
   dplyr::summarise(
@@ -95,7 +99,7 @@ t_SpecCou_Ed_T <- dat2 %>%
 t_SpecCou_Ed_T
 # very interesting that they have not been affected in terms of time
 
-# Educ By Country
+# BY BIRTH COUNTRY & Educ
 t_C_Ed_T <- dat2 %>%
   dplyr::group_by(COUNTRY_OF_BIRTH, EDUC_LEVEL) %>%
   dplyr::summarise(
@@ -109,7 +113,7 @@ t_C_Ed_T <- dat2 %>%
 t_C_Ed_T
 
 
-colnames(dat2)
+#colnames(dat2)
 # [1] "YEAR"                          "YEAR_MONTH"                    "TIMEd"
 # [4] "TIMEm"                         "TIMEy"                         "ENTIRE_TERM"
 # [7] "DECISION_DATE"                 "CASE_RECEIVED_DATE"            "COUNTRY_OF_CITIZENSHIP"
@@ -122,7 +126,7 @@ colnames(dat2)
 # [28] "NAICS_US_CODE"                 "NAICS_US_TITLE"                "FOREIGN_WORKER_INFO_CITY"
 # [31] "FOREIGN_WORKER_INFO_STATE"     "FW_INFO_POSTAL_CODE"           "WORKSITE"
 
-# NAICS_sect By Country
+# BY IRTH COUNTRY & NAICS_sect
 t_C_Sec_T <- dat2 %>%
   dplyr::group_by(COUNTRY_OF_BIRTH, NAICS_sect) %>%
   dplyr::summarise(
@@ -137,7 +141,7 @@ t_C_Sec_T
 
 
 
-# CASE STATUS By Country
+# BY BIRTH COUNTRY & CASE STATUS
 t_C_status_T <- dat2 %>%
   dplyr::group_by(COUNTRY_OF_BIRTH, CASE_STATUS) %>%
   dplyr::summarise(
@@ -152,7 +156,7 @@ t_C_status_T
 # Very interesting to see
 # INDIA	Certified-Expired	 24.5% (of all) !!!! (probably bc the follow up step with USCIS is too long)
 
-# JOB TITLE BY COUNTRY (too big to look but interesting)
+# BY BIRTH COUNTRY & JOB TITLE  (too many levels to look but interesting)
 t_C_job_T <- dat2 %>%
   dplyr::group_by(COUNTRY_OF_BIRTH, PW_SOC_TITLE) %>%
   dplyr::summarise(
@@ -164,17 +168,12 @@ t_C_job_T <- dat2 %>%
   dplyr::arrange(match(COUNTRY_OF_BIRTH, ranking), desc(N_byJob))
 
 t_C_job_T
-# Very interesting to see
-# INDIA	Certified-Expired	 24.5% (of all) !!!! (probably bc the follow up step with USCIS is too long)
-
-
-# NEXT !!!!!!!!!!!!!!
 
 
 
 # STUDY GROUPS TABLES -------------------------------------------------------------------------------
 
-# test difference in means
+# test difference in means significant?
 # R function to compute paired t-test
 
 # t.test(x, y, paired = TRUE, alternative = "two.sided")
@@ -231,7 +230,7 @@ dat2$SPECIAL_COUNTRY <- as.factor(dat2$SPECIAL_COUNTRY)
 dat2$BAN_COUN <- dat2$SPECIAL_COUNTRY
 
 
-# Dummy for Travel Ban Country
+# Create Dummy for Travel Ban Country
 dat2$BAN_COUN <- if_else(dat2$SPECIAL_COUNTRY == "TravelBan", "TravelBan", "Other")
 dat2$BAN_COUN <- as.factor(dat2$BAN_COUN)
 levels(dat2$BAN_COUN)
@@ -241,7 +240,7 @@ skimr::n_missing(dat2$BAN_COUN)
 # Measn testing  ------------------------------------------------------------------------------
 res_t <- t.test(TIMEm ~ BAN_COUN, data = dat2, paired = F)
 res_t
-# the avg time is signif different but Ban is LOWER !!!!! (5.168018 < 5.852815 )
+# the avg time is signif different but by little and Ban is LOWER !!!!! (5.168018 < 5.852815 )
 
 res_t <- t.test(PREVAILING_WAGE ~ BAN_COUN, data = dat2, paired = F)
 res_t
@@ -264,6 +263,8 @@ res_t
 # 12 TravelBan       PostGraduate       2503     4.84     4.21  93483. 318413.
 
 
+
+# Check only certif with ENTIRE process in1 term ----------------------------------------------
 # Compute paired samples t-test (OBAMA vs TRUMP) ---------------------------------------------------------------
 temp <- dat2 %>% filter(ENTIRE_TERM != "MIXED")
 
@@ -276,7 +277,7 @@ res_tr
             #   mean in group OBAMA_cmp     mean in group TRUMP
             # 6.741115                3.872758
 
-# Can it be because more were denied? {NOPE}
+# Could it be because more were denied? {NOPE} --------------------------------------------------
 temp %>%
   dplyr::group_by(ENTIRE_TERM) %>%
   dplyr::summarise(
@@ -285,7 +286,6 @@ temp %>%
     PercDeni = sum(CASE_STATUS == "Denied") / n() * 100
   )
 
-
 class(dat2$EDUC_LEVEL)
 class(dat2$SPECIAL_COUNTRY)
 class(dat2$REGION_BIRTH)
@@ -293,48 +293,18 @@ dat2$REGION_BIRTH <- as.factor(dat2$REGION_BIRTH)
 
 
 
-# <5000 sample --------------------------------------------------------------------------------
-
-# using function stratified to get a 5000 sample
-source(here::here("R", "stratified_samples.R"), echo = T, prompt.echo = "") # ,  spaced = F)
-dat_sample <- dat2 %>%
-  # Take a sample of <5000
-  stratified("COUNTRY_OF_BIRTH", 0.01)
+# To run Shapiro test must have <5000 sample -----------------------------------------------------
 
 # 1-WAY ANOVA ---------------------------------------------------------------------------------
 # Multiple pairwise-comparison between the n>1 groups’ means ANOVA {levels of 1 cat var --> }
-# --------------------------------
-
-# ==== Group by group across REGION_BIRTH
-# --------One-Way ANOVA F-Test {REGION, TIME}
-# Show the levels
-levels(dat2$REGION_BIRTH)
-
-# #Test for homogeneity of variances by groups
-car::leveneTest(TIMEm ~ REGION_BIRTH, data = dat2)
-# Compared to the Bartlet test
-bartlett.test(TIMEm ~ REGION_BIRTH, data = dat2)
-# SHAPIRO_WILK TEST FOR NORMALITY----
-# turn off scientific notaton
-options(scipen = 999) #  to turn back on options(scipen = 0)
-
-# Test for normality of each group and store in shapirowilktests
-# This uses the broom package to get clean output of the test
-# dat2 %>%
-#   group_by(REGION_BIRTH, EDUC_LEVEL) %>%
-#   # test
-#   tidy(shapiro.test(.$TIMEm)) # Error: C stack usage  7969584 is too close to the limit
 
 
-# dat_sample %>%
-#   group_by(REGION_BIRTH, EDUC_LEVEL) %>%
-#   # test
-#   tidy(shapiro.test(.$TIMEm)) # # Error: C stack usage  7969584 is too close to the limit
-
+# --------One-Way ANOVA F-Test {REGION, TIMEm}
 aov1 <- aov(TIMEm ~ REGION_BIRTH, data = dat2)
 summary(aov1) # diff between the groups significant at 0.001
 # Tukey multiple pairwise-comparisons for post-hoc comparison
 TukeyRes <- stats::TukeyHSD(aov1, ordered = F)
+
 # ==== Show table
 # OR
 # TukeyResTukeyRes[1:1] #
@@ -342,8 +312,7 @@ TukeyRes <- stats::TukeyHSD(aov1, ordered = F)
 TukeyRes_df <- broom::tidy(TukeyRes) %>%
   dplyr::select(-term) %>%
   arrange(desc(estimate))
-
-# # ==== Display
+# ==== Display
 caption <- "Pairwise-comparison between the TIME means of groups (REGION_BIRTH)"
 TukeyRes_df_table <- pander::pandoc.table.return(TukeyRes_df,
   keep.line.breaks = T,
@@ -359,11 +328,8 @@ cat(TukeyRes_df_table)
 levels(dat2$REGION_BIRTH)
 aov2 <- aov(PREVAILING_WAGE ~ REGION_BIRTH, data = dat2)
 summary(aov2) # diff between the groups significant at 0.001
-
 # ANOVA test is significant --> Tukey multiple pairwise-comparisons for post-hoc comparison
 TukeyRes2 <- stats::TukeyHSD(aov2, ordered = F)
-
-
 # ==== Show table
 # OR
 # TukeyResTukeyRes[1:1] #
@@ -371,12 +337,9 @@ TukeyRes2 <- stats::TukeyHSD(aov2, ordered = F)
 TukeyRes2_df <- broom::tidy(TukeyRes2) %>%
   dplyr::select(-term) %>%
   arrange(desc(estimate))
-
-
 # # ==== Display Pairwise-comparison
 caption <- "Pairwise-comparison between the WAGE means of groups (REGION_BIRTH)"
 colnames(TukeyRes2_df)
-
 TukeyRes2_df_table <- pander::pandoc.table.return(TukeyRes2_df,
   keep.line.breaks = T,
   style = "simple",
@@ -384,7 +347,6 @@ TukeyRes2_df_table <- pander::pandoc.table.return(TukeyRes2_df,
   caption = caption,
   split.table = Inf
 )
-
 cat(TukeyRes2_df_table)
 
 
@@ -393,15 +355,14 @@ cat(TukeyRes2_df_table)
 # TWO-WAY ANOVA  ------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------
 
-
-# get statistics with `Rmisc`
+# First, get statistics with `Rmisc`
 summary <- summarySE(dat2,
   measurevar = "TIMEm",
   groupvars = c("REGION_BIRTH", "REGION_BIRTH")
 )
 class(summary)
 
-# PLOT WITH 2 CATEG ????
+# Visual check
 boxplot(TIMEm ~ REGION_BIRTH:REGION_BIRTH,
   data = dat2, # WHA TI JUST GOT
   xlab = "BOTH",
@@ -412,8 +373,10 @@ boxplot(TIMEm ~ REGION_BIRTH:REGION_BIRTH,
 interaction.plot(dat2$REGION_BIRTH, dat2$EDUC_LEVEL, dat2$TIMEm)
 interaction.plot(dat2$EDUC_LEVEL, dat2$REGION_BIRTH, dat2$TIMEm)
 
-# THE TWO WAY AOV----
-# 1/2 {car} -----------------------------------------------------------------------------------------
+
+# Different methods estimate 2-WAY AOV -----------------------------------------------------------------
+
+# 1/2 Using {car} -----------------------------------------------------------------------------------------
 # Type III is used for unbalanced designs when there are unequal numbers of samples in teh various categories or groups which is an unbalanced design
 # Type I, - sequential  SS
 # Type II  - tests for each main effect after the other main effect
@@ -421,14 +384,11 @@ interaction.plot(dat2$EDUC_LEVEL, dat2$REGION_BIRTH, dat2$TIMEm)
 # 					SS(A | B, AB) for factor A.
 # 					SS(B | A, AB) for factor B.
 
-
-
-
 # Fit the linear model and conduct ANOVA {WHY ON THE LN MOD ????}
 modelI <- lm(TIMEm ~ SPECIAL_COUNTRY * EDUC_LEVEL, data = dat_sample) # <5000 for shapiro test to work
 
 # --------- THIS WILL DO A TYPE I ANOVA
-stats::anova(modelI)
+# stats::anova(modelI)
 
 # --------- THIS WILL DO A TYPE III ANOVA {car}
 # ... bc data is unbalanced here
@@ -448,25 +408,10 @@ shapiro.test(modelIII$res) # OK
 # plot of residuals
 plot(modelIII, 1) #  The residuals should be unbiased and homoscedastic.
 
+# Test for homogeneity of variances by groups (>2 groups: Bartlett’s test, Levene’s test)
+# H0 all populations variances are equal; H1 at least two of them differ.
+car::leveneTest(TIMEm ~ SPECIAL_COUNTRY * EDUC_LEVEL, data = dat2) # -> definitley!
 
-# #Test for homogeneity of variances by groups
-car::leveneTest(TIMEm ~ SPECIAL_COUNTRY * EDUC_LEVEL, data = dat2)
-
-# POST HOC ANALYSIS
-lsmseason <- pairs(lsmeans::lsmeans(modelIII, "EDUC_LEVEL"), adjust = "bonferroni") ### Means sharing a letter in .group are not significantly different when more than one categorical varaible
-# cld(lsmseason,
-#     alpha=.05,
-#     Letters=letters)
-
-test(lsmseason)
-
-# POST HOC ANALYSIS
-lsmseason2 <- pairs(lsmeans(modelIII, "SPECIAL_COUNTRY"), adjust = "bonferroni") ### Means sharing a letter in .group are not significantly different when more than one categorical varaible
-# cld(lsmseason,
-#     alpha=.05,
-#     Letters=letters)
-
-test(lsmseason2)
 
 # 2/2 Using {stats}----------------------------------------------------------------------------------------
 # Comparing means with a two-factor ANOVA SPECIAL_COUNTRY*EDUC_LEVEL
@@ -484,7 +429,6 @@ aovTWO$effects
 # Post-hoc test
 TukeyHSD(aov1)
 
-
 # Get an Idea...
 boxplot(TIMEm ~ SPECIAL_COUNTRY * EDUC_LEVEL, data = dat2)
 # even if they are mostly significant , really there is not much diff
@@ -495,10 +439,6 @@ boxplot(TIMEm ~ SPECIAL_COUNTRY * EDUC_LEVEL, data = dat2)
 # ----- PALETTE of 3 divergent colors
 cols_div_7 <- c(colorRampPalette(RColorBrewer::brewer.pal(8, "Dark2"))(8)) # [c(1, 4, 8)])
 cols_div_7
-# ----- PALETTE of 5 sequential values in the blue palette so it is not too clear
-cols_blue_seque <- c(colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(6)[3:7])
-cols_blue_seque
-
 
 
 # ggboxplot(dat2, x = "SPECIAL_COUNTRY"*"EDUC_LEVEL", y = "TIMEm",
@@ -540,7 +480,6 @@ bp
 
 
 # Add p-values comparing groups ---------------------------------------------------------------
-
 # Specify the comparisons you want
 my_comparisons <- list(
   c("SouthAsia", "LatAm & Caribb"),
@@ -554,7 +493,7 @@ bp + stat_compare_means(comparisons = my_comparisons, label = "p.signif") + # Ad
 
 
 
-# # Violin plots   ----------------------------------------------------------------------------
+# Violin plots   ----------------------------------------------------------------------------
 ggviolin(dat2,
   x = "REGION_BIRTH", y = "TIMEm", fill = "REGION_BIRTH",
   palette = cols_div_7
@@ -564,9 +503,8 @@ ggviolin(dat2,
 
 
 
-
+# Moving on to some descriptive stats ---------------------------------------------------------
 # Some EXPLOR PLOTS ---------------------------------------------------------------------------
-
 # Generic ggplot graphics configuration I will be using for all my plots
 # get_theme <- function() {
 # 	return(theme(axis.title = element_text(size = rel(1.5)),
@@ -623,12 +561,6 @@ g <- plot_output(input, "YEAR", "PW_LEVEL_9089", "Time_med_d", "", "Median Time 
 g
 
 
-
-# Final save data -----------------------------------------------------------------------------
-dat3 <- dat2
-saveRDS(dat3, file = "dat3.Rds")
-
-
 # Extra Checks --------------------------------------------------------------------------------
 dat3$NAICS_sect <- as.factor(dat3$NAICS_sect)
 
@@ -659,3 +591,9 @@ class <- dat3 %>%
 (JOB_INFO_JOB_TITLE <- dat3 %>%
     group_by(JOB_INFO_JOB_TITLE) %>%
     tally() %>%   arrange(desc(n)) %>% .[1:50,] %>% .$JOB_INFO_JOB_TITLE)
+
+
+# Final save data -----------------------------------------------------------------------------
+dat3 <- dat2
+saveRDS(dat3, file = "dat3.Rds")
+
