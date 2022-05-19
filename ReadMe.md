@@ -4,7 +4,8 @@
 
 > The green card process for foreign workers is getting slower and more demanding
 
-Study based on DOL/OFLC and USCIS data to vrify whether the Trump administration has slowed down the green card application process for foreign workers?
+A brief study based on DOL/OFLC and USCIS data to verify whether the Trump administration has slowed down the green card application process for foreign workers?
+The final article can be downloaded [here](https://raw.githubusercontent.com/Lulliter/GreenCard/master/05_Analysis.pdf).
 
 ## Author
 
@@ -47,7 +48,6 @@ Below are the sources of datasets, R code chunks, and other interesting articles
 + [OFLC Disclosure Data: Labor Certifications for Permanent Residents](https://www.foreignlaborcert.doleta.gov/performancedata.cfm)
 + [USCIS: Processing time averages 2015-2019](https://egov.uscis.gov/processing-times/historic-pt)
 + [Migration Policy Institute: Refugees and Asylees](https://www.migrationpolicy.org/article/refugees-and-asylees-united-states#Adjusting_to_Lawful_Permanent_Resident_Status)
-
 
 ##### Reference
 + [National Law Review: on USCIS Reports on Lagging Processing Times](https://www.natlawreview.com/article/uscis-reports-lagging-processing-times)
